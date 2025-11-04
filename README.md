@@ -14,11 +14,59 @@ This ensures you always have the latest version with automatic updates and optim
 
 ### Alternative Method (Not Recommended)
 
-If you need to self-host the script, you can copy the contents of `helper.js` from this repository and include it in your project. However, this method is **not recommended** because:
+If you need to self-host the script, you can copy the following code and include it in your project. However, this method is **not recommended** because:
 
 - You won't receive automatic updates
 - You're responsible for manually updating the script
 - You may miss important bug fixes and new features
+
+<!-- BEGIN HELPER SCRIPT -->
+```html
+<script>
+(() => {
+  const load = async (doc, clicktag, campaign) => {
+    try {
+      const res = await fetch(
+        `https://impact.naudata.ch/${campaign}?b=${(() => {
+          let a = navigator.userAgent;
+          let i = a.indexOf("Chrome/");
+          if (i < 0) return "c";
+          let o = a.indexOf(" ", i);
+          const c = a.substring(i + 7, o);
+          return parseInt(c) >= 115 ? "m" : "c";
+        })()}`,
+      );
+      const script = doc.createElement("script");
+      script.setAttribute("type", "module");
+      script.dataset["clicktag"] = clicktag;
+      script.id = "nau-videohead";
+      script.innerHTML = await res.text();
+      doc.head.appendChild(script);
+    } catch (err) {
+      console.error(err);
+      console.error(2);
+    }
+  };
+  const mount = () => {
+    try {
+      const doc = window.top.document;
+      window.addEventListener("message", (data) => {
+        if (data?.data?.type !== "nau-v-show") return;
+        window._nau_vid_frame = data.source;
+        load(doc, data.data.clicktag, data.data.campaign);
+      });
+      console.log("embed");
+    } catch (err) {
+      console.error(err);
+      console.log("embed crash");
+    }
+  };
+
+  mount();
+})();
+</script>
+```
+<!-- END HELPER SCRIPT -->
 
 ## Support
 

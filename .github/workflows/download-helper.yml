@@ -20,10 +20,38 @@ jobs:
         run: |
           curl -o helper.js https://impact.naudata.ch/embed
 
+      - name: Update README with helper script content
+        run: |
+          # Read the helper.js content
+          HELPER_CONTENT=$(cat helper.js)
+
+          # Create a temporary file with the updated README
+          awk -v content="$HELPER_CONTENT" '
+            BEGIN { in_script = 0; print_line = 1 }
+            /<!-- BEGIN HELPER SCRIPT -->/ {
+              print $0
+              print "```html"
+              print "<script>"
+              print content
+              print "</script>"
+              print "```"
+              in_script = 1
+              print_line = 0
+              next
+            }
+            /<!-- END HELPER SCRIPT -->/ {
+              in_script = 0
+              print_line = 1
+            }
+            print_line { print $0 }
+          ' README.md > README.md.tmp
+
+          mv README.md.tmp README.md
+
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Update helper.js from impact.naudata.ch'
-          file_pattern: 'helper.js'
+          commit_message: 'Update helper.js and README from impact.naudata.ch'
+          file_pattern: 'helper.js README.md'
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
