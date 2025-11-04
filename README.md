@@ -1,7 +1,5 @@
 # Impact Helper Script
 
-This repository provides the latest version of the Impact analytics helper script for easy integration into your projects.
-
 ## Usage
 
 ### Recommended Method
@@ -21,10 +19,6 @@ If you need to self-host the script, you can copy the contents of `helper.js` fr
 - You won't receive automatic updates
 - You're responsible for manually updating the script
 - You may miss important bug fixes and new features
-
-## About This Repository
-
-The `helper.js` file is automatically synchronized with the latest version from impact.naudata.ch every day, ensuring this repository always contains the most recent version of the script.
 
 ## Support
 
