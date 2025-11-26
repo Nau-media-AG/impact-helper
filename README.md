@@ -39,6 +39,7 @@ If you need to self-host the script, you can copy the following code and include
       const script = doc.createElement("script");
       script.setAttribute("type", "module");
       script.dataset["clicktag"] = clicktag;
+      script.classList.add("nau-vid-d");
       script.id = "nau-videohead";
       script.innerHTML = await res.text();
       doc.head.appendChild(script);

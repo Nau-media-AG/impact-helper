@@ -14,6 +14,7 @@
       const script = doc.createElement("script");
       script.setAttribute("type", "module");
       script.dataset["clicktag"] = clicktag;
+      script.classList.add("nau-vid-d");
       script.id = "nau-videohead";
       script.innerHTML = await res.text();
       doc.head.appendChild(script);
