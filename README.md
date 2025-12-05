@@ -55,16 +55,30 @@ If you need to self-host the script, you can copy the following code and include
         if (data?.data?.type !== "nau-v-show") return;
         window._nau_vid_frame = data.source;
         load(doc, data.data.clicktag, data.data.campaign);
+        data.source.postMessage({ type: "embed-available" });
       });
       console.log("embed");
     } catch (err) {
-      console.error(err);
-      console.log("embed crash");
+      error("4: " + err);
     }
   };
 
   mount();
 })();
+
+function error(id) {
+  fetch("https://api.nau.ch/logging/impact/log/", {
+    method: "POST",
+    body: JSON.stringify({
+      level: "error",
+      message: id,
+      origin: window.location.origin,
+      user_agent: navigator.userAgent,
+      referrer: document.referrer,
+    }),
+  });
+  throw new Error(id + "");
+}
 </script>
 ```
 <!-- END HELPER SCRIPT -->
