@@ -55,7 +55,7 @@ If you need to self-host the script, you can copy the following code and include
         if (data?.data?.type !== "nau-v-show") return;
         window._nau_vid_frame = data.source;
         load(doc, data.data.clicktag, data.data.campaign);
-        data.source.postMessage({ type: "embed-available" });
+        data.source.window.postMessage({ type: "embed-available" }, "*");
       });
       console.log("embed");
     } catch (err) {
