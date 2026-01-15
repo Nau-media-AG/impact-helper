@@ -24,13 +24,18 @@
     }
   };
   const mount = () => {
+    sendAvailable();
+
     try {
       const doc = window.top.document;
       window.addEventListener("message", (data) => {
-        if (data?.data?.type !== "nau-v-show") return;
-        window._nau_vid_frame = data.source;
-        load(doc, data.data.clicktag, data.data.campaign);
-        data.source.window.postMessage({ type: "embed-available" }, "*");
+        if (data?.data?.type === "nau-v-show") {
+          window._nau_vid_frame = data.source;
+          load(doc, data.data.clicktag, data.data.campaign);
+        }
+        if (data?.data?.type === "connector" && data?.data?.name === "nau") {
+          sendAvailable();
+        }
       });
       console.log("embed");
     } catch (err) {
@@ -40,6 +45,12 @@
 
   mount();
 })();
+
+function sendAvailable() {
+  [...document.getElementsByTagName("iframe")].forEach((el) =>
+    el.contentWindow.postMessage({ type: "embed-available" }, "*"),
+  );
+}
 
 function error(id) {
   fetch("https://api.nau.ch/logging/impact/log/", {
