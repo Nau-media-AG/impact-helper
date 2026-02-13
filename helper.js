@@ -26,12 +26,12 @@
   const mount = () => {
     sendAvailable();
 
+    const embedWindow = window;
     try {
-      const doc = window.top.document;
-      window.addEventListener("message", (data) => {
+      window.top.addEventListener("message", (data) => {
         if (data?.data?.type === "nau-v-show") {
           window._nau_vid_frame = data.source;
-          load(doc, data.data.clicktag, data.data.campaign);
+          load(embedWindow.document, data.data.clicktag, data.data.campaign);
         }
         if (data?.data?.type === "connector" && data?.data?.name === "nau") {
           sendAvailable();
