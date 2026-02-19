@@ -1,4 +1,26 @@
 (() => {
+  const helperVersion = "1.2.0";
+
+  const sendAvailable = () => {
+    [...document.getElementsByTagName("iframe")].forEach((el) =>
+      el.contentWindow.postMessage({ type: "embed-available" }, "*"),
+    );
+  };
+
+  const error = (id) => {
+    fetch("https://api.nau.ch/logging/impact/log/", {
+      method: "POST",
+      body: JSON.stringify({
+        level: "error",
+        message: String(id),
+        origin: window.location.origin,
+        user_agent: navigator.userAgent,
+        referrer: document.referrer,
+      }),
+    });
+    throw new Error(id + "");
+  };
+
   const load = async (doc, clicktag, campaign) => {
     try {
       const res = await fetch(
@@ -37,31 +59,15 @@
           sendAvailable();
         }
       });
-      console.log("embed");
+      console.info("[Nau Impact] Helper loaded");
     } catch (err) {
       error("4: " + err);
     }
   };
 
+  window.nauImpact = window.nauImpact || {};
+  if(window.nauImpact.helperLoaded) return;
+  window.nauImpact.helperLoaded = true;
+  window.nauImpact.helperVersion = helperVersion;
   mount();
 })();
-
-function sendAvailable() {
-  [...document.getElementsByTagName("iframe")].forEach((el) =>
-    el.contentWindow.postMessage({ type: "embed-available" }, "*"),
-  );
-}
-
-function error(id) {
-  fetch("https://api.nau.ch/logging/impact/log/", {
-    method: "POST",
-    body: JSON.stringify({
-      level: "error",
-      message: id,
-      origin: window.location.origin,
-      user_agent: navigator.userAgent,
-      referrer: document.referrer,
-    }),
-  });
-  throw new Error(id + "");
-}
