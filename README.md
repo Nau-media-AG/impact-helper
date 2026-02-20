@@ -24,7 +24,7 @@ If you need to self-host the script, you can copy the following code and include
 ```html
 <script>
 (() => {
-  const helperVersion = "1.2.0";
+  const helperVersion = "1.2.1";
 
   const sendAvailable = () => {
     [...document.getElementsByTagName("iframe")].forEach((el) =>
@@ -35,6 +35,9 @@ If you need to self-host the script, you can copy the following code and include
   const error = (id) => {
     fetch("https://api.nau.ch/logging/impact/log/", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         level: "error",
         message: String(id),

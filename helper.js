@@ -1,5 +1,5 @@
 (() => {
-  const helperVersion = "1.2.0";
+  const helperVersion = "1.2.1";
 
   const sendAvailable = () => {
     [...document.getElementsByTagName("iframe")].forEach((el) =>
@@ -10,6 +10,9 @@
   const error = (id) => {
     fetch("https://api.nau.ch/logging/impact/log/", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         level: "error",
         message: String(id),
